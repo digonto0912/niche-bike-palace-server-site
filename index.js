@@ -91,16 +91,28 @@ async function run(){
            res.json(result);
 
        })
+
        // api make an admin
 
        app.put('/users/admin',async(req,res)=>{
            const user = req.body;
             console.log(user);
            const filter = {email:user.email};
+           const options = { upsert: true };
            const updateDoc = {$set:{role:'admin'}};
-           const result = await userCollection.updateOne(filter,updateDoc);
+           const result = await userCollection.updateOne(filter,updateDoc,options);
            res.json(result);
        })
+       //api status update
+        app.put('/statusUpdate/:id',async(req,res)=>{
+            const user = req.params.id;
+            const filter = {_id:objectId(user)};
+            const updateDoc = {$set:{
+                status:req.body.status
+            }};
+            const result = await orderCollection.updateOne(filter,updateDoc);
+            res.json(result);
+        })
 
        //add product
         app.post("/addproducts", async (req, res) => {
@@ -148,6 +160,8 @@ async function run(){
             const result = await revieCollection.find({}).toArray();
             res.send(result);
         });
+        //api status update
+
 
 
         
